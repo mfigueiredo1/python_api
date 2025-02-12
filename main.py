@@ -34,20 +34,18 @@ with app.app_context():
 @app.route('/')
 def home():
     
-    return jsonify({'message': 'Welcome to the Travel API'})
+    return jsonify({"message":"Welcome to the Travel API"})
 
 #https://www.thenerdnook.io/destinations
-@app.route('/destinations', methods=['GET'])
+@app.route("/destinations", methods=["GET"])
 def get_destinations():
     destinations = Destination.query.all()
 
-    return jsonify([destination.to_Dict()] for destination in destinations)
+    return jsonify([destination.to_Dict() for destination in destinations])
 
 
 #https://www.thenerdnook.io/destination/2
-@app.route('/destination/<int:destination_id>', methods=['GET'])
-
-    
+@app.route("/destinations/<int:destination_id>", methods=["GET"])
 def get_destination(destination_id):
     destination = Destination.query.get(destination_id)
     if destination:
@@ -57,7 +55,9 @@ def get_destination(destination_id):
 
 
 # POST (Send information to our API)
-@app.route("/destination", methods=['POST'])
+
+
+@app.route("/destinations", methods=['POST'])
 def add_destination():
     data = request.get_json()
     #taking the incoming json body and parsing that information
@@ -75,16 +75,16 @@ def add_destination():
 
 
 # PUT -> Update
-@app.route("/destination/<int:destination_id>", methods=['PUT'])
+@app.route("/destinations/<int:destination_id>", methods=['PUT'])
 
 def update_destination(destination_id):
     data = request.get_json()
     destination = Destination.query.get(destination_id)
 
-    if destination_id:
-        destination.destination = data('destination', destination.destination)
-        destination.country = data('country', destination.country)
-        destination.rating = data('rating', destination.rating)
+    if destination:
+        destination.destination = data.get('destination', destination.destination)
+        destination.country = data.get('country', destination.country)
+        destination.rating = data.get('rating', destination.rating)
 
         db.session.commit()
 
@@ -93,7 +93,7 @@ def update_destination(destination_id):
         return jsonify({'message': 'No destination found'}), 404
     
 # DELETE
-@app.route("/destination/<int:destination_id>", methods=['DELETE'])
+@app.route("/destinations/<int:destination_id>", methods=['DELETE'])
 def delete_destination(destination_id):
     destination = Destination.query.get(destination_id)
 
